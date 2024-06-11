@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const modelName = "post";
+const modelName = "posts";
 
 const schema = new mongoose.Schema({
   title: { 

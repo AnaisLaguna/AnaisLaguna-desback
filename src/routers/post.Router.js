@@ -7,22 +7,21 @@ const router = express.Router();
 
 // POST 
 router.post('/', auth, async (request, response) => {
-    try {
-        request.body.user = request.user.id;
-        const newPost = await postusercase.createUser(request.body);
-        response.json({
-            success: true,
-            message: `Usuario registrado correctamente`,
-            data: { post: newPost },
-        });
-    } catch (error) {
-        response.status(error.status || 500);
-        response.json({
-            success: false,
-            message: 'Error al registrar usuario',
-            error: error.message,
-        });            
-    }
+  try {
+      const newUser = request.user._id; 
+      const postCreated = await postusercase.create(request.body, newUser);
+      res.json({
+          success: true,
+          data: { postCreated },
+      });
+  } catch (error) {
+     res.status(error.status || 500);
+     res.json({
+      success: false,
+      message: "Post creado correctamente",
+      error: error.message,
+     });
+  }
 });
 
 // GET /posts
@@ -30,14 +29,14 @@ router.get('/', async (request, response) => {
     try {
       const { search } = request.query;
       if (!search) {
-        const posts = await postUserCase.getAllPosts();
+        const posts = await postusercase.getAllPosts();
         response.json({
           success: true,
           message: 'Se ha obtenido correcto el post',
           data: { posts },
         });
       } else {
-        const posts = await postUserCase.getByTitle(search);
+        const posts = await postusercase.getByTitle(search);
         response.json({
           success: true,
           message: `PPost obtenido corectamente por busqueda: ${search}`,
